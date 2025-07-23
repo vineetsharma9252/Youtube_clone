@@ -1,0 +1,216 @@
+
+/* Main container */
+.subscription-tiers-container {
+  background: linear-gradient(180deg, #1a1a1a, #212121); /* Matches Navbar gradient */
+  min-height: 100vh;
+  padding: 40px 24px;
+  color: #ffffff;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Heading */
+.subscription-tiers-container h1 {
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 500;
+  margin-bottom: 32px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* Login prompt for unauthenticated users */
+.login-prompt {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #aaaaaa;
+  margin-bottom: 24px;
+  padding: 12px;
+  background-color: #2c2c2c;
+  border-radius: 8px;
+}
+
+/* Tiers grid */
+.tiers-grid {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Individual tier card */
+.tier-card {
+  background-color: #252525;
+  border: 1px solid #3c3c3c;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effect for tier card */
+.tier-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  border-color: #555555;
+}
+
+/* Active tier highlight (current plan) */
+.tier-card.active-tier {
+  border: 2px solid #ff0000; /* YouTube red for current tier */
+  background-color: #2c2c2c;
+}
+
+/* Tier name */
+.tier-card h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+/* Tier description */
+.tier-description {
+  font-size: 1rem;
+  color: #cccccc;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Benefits list */
+.tier-benefits {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+/* Individual benefit item */
+.tier-benefits li {
+  font-size: 0.95rem;
+  color: #dddddd;
+  margin-bottom: 12px;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.4;
+}
+
+/* Checkmark icon for benefits */
+.tier-benefits li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #3ea6ff; /* YouTube blue accent */
+  font-size: 1.1rem;
+}
+
+/* Tier price */
+.tier-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+/* Tier button (Upgrade/Downgrade) */
+.tier-button {
+  width: 100%;
+  padding: 12px 24px;
+  background-color: #ff0000; /* YouTube red */
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect for button */
+.tier-button:hover:not(:disabled) {
+  background-color: #cc0000;
+  transform: scale(1.02);
+}
+
+/* Active effect for button */
+.tier-button:active:not(:disabled) {
+  background-color: #990000;
+  transform: scale(0.98);
+}
+
+/* Disabled button for current plan */
+.tier-button.current-plan {
+  background-color: #555555;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .tiers-grid {
+    gap: 16px;
+  }
+
+  .tier-card {
+    max-width: 300px;
+  }
+
+  .subscription-tiers-container h1 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tiers-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tier-card {
+    max-width: 100%;
+    width: 90%;
+  }
+
+  .subscription-tiers-container {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subscription-tiers-container {
+    padding: 16px 12px;
+  }
+
+  .subscription-tiers-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .tier-card {
+    padding: 16px;
+  }
+
+  .tier-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .tier-description {
+    font-size: 0.9rem;
+  }
+
+  .tier-benefits li {
+    font-size: 0.85rem;
+  }
+
+  .tier-price {
+    font-size: 1.1rem;
+  }
+
+  .tier-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

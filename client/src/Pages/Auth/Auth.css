@@ -2,7 +2,7 @@
     width: 100vw;
     height: 100vh;
     position: absolute;
-    z-index: 500;
+    z-index: 1000;
     top: 0;
     right: 0;
     box-sizing: border-box;
@@ -54,3 +54,20 @@
     text-decoration: none;
   }
   
+  .sub_list {
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    font-size: larger;
+    color: aliceblue;
+  }
+
+  .sub_btn{
+    color: aliceblue;
+    font-weight: bolder;
+    font-size: larger;
+    padding: 0.5rem 0.5rem;
+    border: 0;
+    margin: 0.2rem 0;
+    background-color: transparent;
+  }

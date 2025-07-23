@@ -14,7 +14,7 @@ const Describechannel = ({setvideouploadpage,cid,seteditcreatechanelbtn}) => {
   // ]
 const channel=useSelector(state=>state.chanelreducer)
 
-const currentchannel=channel.filter((c)=>c._id=== cid)[0]
+const currentchannel=channel.filter((c)=>c.email=== cid)[0]
 const currentuser=useSelector(state => state.currentuserreducer);
 // console.log(currentchannel)
   return (
@@ -24,9 +24,9 @@ const currentuser=useSelector(state => state.currentuserreducer);
       </div>
       <div className="description_chanel">
         <b>{currentchannel?.name}</b>
-        <p>{currentchannel?.desc}</p>
+        <p>{currentchannel?.desc || ""}</p>
       </div>
-      {currentuser?.result._id === currentchannel?._id &&(
+      {currentuser?.email === currentchannel?.email &&(
         <>
         <p className="editbtn_chanel" onClick={()=>seteditcreatechanelbtn(true)}>
           <FaEdit/>

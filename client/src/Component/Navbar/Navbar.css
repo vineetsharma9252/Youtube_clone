@@ -1,68 +1,266 @@
-.Container_Navbar{
-    border: 1px solid;
-    display: flex;
-    height: calc(3.5rem - 2px);
-    background-color: rgb(33, 33, 33);
-    justify-content: space-between;
+
+/* Main navbar container */
+.Container_Navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px; /* Standard navbar height */
+  background: linear-gradient(180deg, #1a1a1a, #212121); /* Subtle dark gradient */
+  color: #fff;
+  border-bottom: 1px solid #3c3c3c; /* Subtle border */
+  padding: 0 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
-.Burger_Logo_Navbar{
-    display: flex;
-    height: 3.3rem;
+
+/* Burger menu and logo container */
+.Burger_Logo_Navbar {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Consistent spacing */
 }
-.burger{
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    justify-content: space-evenly;
-    margin: 0.2rem;
-    padding: 0.5rem;
-    border: 1 px solid transparent;
-    margin-left: 0.5rem;
-    margin-right: 0.7rem;
-    border-radius: 100%;
+
+/* Burger menu */
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px; /* Tighter spacing for hamburger lines */
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
-.burger p{
-    margin: 0.5px;
-    width: 1.2rem;
-    height: 0.1rem;
-    background-color: rgb(255, 244, 244);
+
+.burger:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
 }
-.logo_div_Navbar{
-    display: flex;
-    text-decoration: none;
+
+.burger p {
+  margin: 0;
+  width: 18px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 1px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
-.logo_title_navbar{
-    margin: auto;
-    color: white;
-    font-weight: bold;
+
+/* Optional: Animate burger to 'X' when active (requires state in JSX) */
+.burger.active p:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
 }
-.apps_Box{
-    width: 25px;
-    margin: auto 0.7rem;
-    height: 25px;
-    display: flex;
+
+.burger.active p:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.active p:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Logo container */
+.logo_div_Navbar {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 8px;
+}
+
+.logo_div_Navbar img {
+  height: 32px; /* Consistent logo size */
+  object-fit: contain;
+}
+
+.logo_title_navbar {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+}
+
+.logo_div_Navbar:hover .logo_title_navbar {
+  color: #f1f1f1; /* Subtle hover effect */
+}
+
+/* Apps grid */
+.apps_Box {
+  display: grid;
+  grid-template-columns: repeat(3, 8px);
+  gap: 2px;
+  margin: auto 12px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.apps_Box:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.appBox {
+  width: 4px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 1px;
+}
+
+/* Auth container */
+.Auth_cont_Navbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 8px;
+}
+
+/* Auth button */
+.Auth_Btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #2c2c2c;
+  border: 1px solid #3ea6ff;
+  border-radius: 4px;
+  color: #3ea6ff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.Auth_Btn:hover {
+  background-color: #3ea6ff;
+  color: #fff;
+  border-color: #3ea6ff;
+}
+
+.Auth_Btn:active {
+  background-color: #2a85cc;
+}
+
+/* Channel logo */
+.Chanel_logo_App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3ea6ff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.Chanel_logo_App:hover {
+  background-color: #2a85cc;
+}
+
+.fstChar_logo_App {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Subscription tier and upgrade buttons */
+.Auth_cont_Navbar p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.Auth_cont_Navbar button {
+  padding: 6px 12px;
+  margin-left: 8px;
+  background-color: #ff0000;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.Auth_cont_Navbar button:hover {
+  background-color: #cc0000;
+}
+
+.Auth_cont_Navbar button:active {
+  background-color: #990000;
+}
+
+/* Subscriptions link */
+.vid_bell_Navbar {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 0.9rem;
+  margin: 0 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.vid_bell_Navbar:hover {
+  color: #3ea6ff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .Container_Navbar {
+    padding: 0 8px;
+    height: 48px;
+  }
+
+  .logo_div_Navbar img {
+    height: 24px;
+  }
+
+  .logo_title_navbar {
+    font-size: 1rem;
+  }
+
+  .apps_Box {
+    display: none; /* Hide apps grid on mobile */
+  }
+
+  .Auth_cont_Navbar {
+    gap: 8px;
+  }
+
+  .Auth_Btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .Auth_cont_Navbar button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Container_Navbar {
     flex-wrap: wrap;
-    justify-content: space-around;
-    
-}
-.appBox{
-    border: 1px solid white;
-    margin: 0.1rem;
-    width: 2px;
-    height: 2px;
-}
-.Auth_cont_Navbar{
-    width: fit-content;
-    margin: auto 0.5rem;
-    position: relative;
-    display: flex;
-}
-.Auth_Btn{
-    cursor: pointer;
-    color: #3ea6ff;
-    background-color: rgb(36,36,36);
-    border: 2px solid;
-    margin: 0;
-    padding: 0.5rem;
-    border-radius: 0.1rem;
+    height: auto;
+    padding: 8px;
+  }
+
+  .Burger_Logo_Navbar {
+    flex: 1;
+  }
+
+  .Auth_cont_Navbar {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .vid_bell_Navbar:not(:last-child) {
+    display: none; /* Hide icons except Subscriptions link */
+  }
 }

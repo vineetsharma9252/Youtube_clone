@@ -1,14 +1,20 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-const auth=(req,res,next)=>{
-    try {
-        const token=req.headers.authorization.split(" ")[1];
-        let decodedata=jwt.verify(token,process.env.JWT_SECERT)
-        req.userid=decodedata?.id
-        next()
-    } catch (error) {
-        res.status(400).json("invalid credentials..")
-        return
+const auth = (req, res, next) => {
+  try {
+    // Remove localStorage; use Authorization header only
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
     }
-}
-export default auth
+    console.log("Token is : ", token);
+    console.log("jwt decode  : ", jwt.decode(token)); // Added decode for debugging
+    let decodedata = jwt.verify(token, process.env.JWT_SECRET); // Fixed typo
+    console.log("Decoded data is : ", decodedata);
+    req.userid = decodedata?.id;
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: "Invalid credentials" }); // Match controller error format
+  }
+};
+export default auth;
