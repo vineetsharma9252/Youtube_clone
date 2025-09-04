@@ -10,9 +10,13 @@ import {
   MdOutlineCabin,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 const Leftsidebar = () => {
+  const theme = useSelector((state) => state.theme_reducer.theme) || "dark"; // Read-only theme
+
   return (
-    <div className="container_leftSidebar">
+    <div className={`container_leftSidebar ${theme}`}>
       <NavLink to={"/"} className="icon_sidebar_div">
         <AiOutlineHome size={22} className="icon_sidebar" />
         <div className="text_sidebar_icon">Home</div>
@@ -38,6 +42,10 @@ const Leftsidebar = () => {
       <NavLink to={"/chat"} className="icon_sidebar_div">
         <MdOutlineChat size={22} className="icon_sidebar" />
         <div className="text_sidebar_icon">Chat</div>
+      </NavLink>
+      <NavLink to={"/video-call"} className="icon_sidebar_div">
+        <MdOutlineVideoLibrary size={22} className="icon_sidebar" />
+        <div className="text_sidebar_icon">Video-Call</div>
       </NavLink>
     </div>
   );

@@ -29,7 +29,7 @@ export const likevideo = (likedata) => async (dispatch) => {
     const { Like, id } = likedata;
     const { data } = await api.likevideo(id, Like);
     dispatch({ type: "POST_LIKE", payload: data });
-    // dispatch(getallvideo());
+    dispatch(getallvideo());
   } catch (error) {
     console.log(error);
   }
@@ -40,6 +40,7 @@ export const viewvideo = (viewdata) => async (dispatch) => {
     const { id } = viewdata;
     console.log(id);
     const { data } = await api.viewsvideo(id);
+    console.log("Views updated successfully:", data);
     dispatch({ type: "POST_VIEWS", data });
     dispatch(getallvideo());
   } catch (error) {

@@ -10,16 +10,6 @@ const Comment = ({ videoid }) => {
   const currentuser = useSelector((state) => state.currentuserreducer);
   const commentlist = useSelector((state) => state.commentreducer);
   console.log(commentlist);
-  // const commentlist=[{
-  //     _id:1,
-  //     commentbody:"hello",
-  //     usercommented:"Abc"
-  // },
-  // {
-  //     _id:2,
-  //     commentbody:"hello2",
-  //     usercommented:"Abc2"
-  // }];
   const filteredComments =
     commentlist?.data?.filter((c) => c.videoid === videoid) || [];
   const handleonsubmit = (e) => {

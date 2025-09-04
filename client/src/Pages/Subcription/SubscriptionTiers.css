@@ -214,3 +214,34 @@
     font-size: 0.9rem;
   }
 }
+.payment-container {
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.payment-container h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.payment-container p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.payment-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.payment-button:hover {
+  background-color: #218838;
+}

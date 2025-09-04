@@ -1,20 +1,21 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { setcurrentuser } from "../../action/currentuser";
 import "./SubscriptionTiers.css";
 
 const SubscriptionTiers = () => {
   const currentuser = useSelector((state) => state.currentuserreducer);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const tiers = [
-    {name:"free",
-      description:"Free access with limited features",
-      benefits:[
-        "No amount to provide"
-      ],
-      price:"₹0/month"
+    {
+      name: "free",
+      description: "Free access with limited features",
+      benefits: ["No amount to provide"],
+      price: "₹0/month",
     },
     {
       name: "Bronze",
@@ -58,41 +59,54 @@ const SubscriptionTiers = () => {
       alert("You are already enrolled in this plan");
       return;
     }
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/subscriptions/upgrade-tier",
-        { tier },
-        { headers: { Authorization: `Bearer ${currentuser.token}` } }
-      );
-      console.log("Upgrade response:", response.data);
-      const { user, token } = response.data;
-      localStorage.setItem(
-        "Profile",
-        JSON.stringify({
-          username: user.email.split("@")[0],
-          token,
-          email: user.email,
-          subscriptionTier: user.subscriptionTier,
-        })
-      );
-      dispatch(
-        setcurrentuser({
-          username: user.email.split("@")[0],
-          token,
-          email: user.email,
-          subscriptionTier: user.subscriptionTier,
-        })
-      );
-      alert(`Successfully upgraded to ${tier}`);
-    } catch (error) {
-      console.error(
-        "Upgrade failed:",
-        error.response?.data?.error || error.message
-      );
-      alert(
-        "Upgrade failed: " +
-          (error.response?.data?.error || "Something went wrong")
-      );
+    // Extract amount from price (remove ₹ and /month)
+    const amount =
+      parseInt(tier.replace("₹", "").replace("/month", "").trim()) * 100; // Convert to paise
+
+    console.log("Selected tier:", tier, "Amount in paise:", amount);
+    if (amount > 0) {
+      // Navigate to payment page with tier details
+      navigate("/payment", { state: { tier, amount } });
+    } else {
+      // Handle free tier upgrade directly
+      tier = "free";
+      console.log("Current user:", currentuser);
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/subscriptions/upgrade-tier",
+          { tier },
+          { headers: { Authorization: `Bearer ${currentuser.token}` } }
+        );
+        console.log("Upgrade response:", response.data);
+        const { user, token } = response.data;
+        localStorage.setItem(
+          "Profile",
+          JSON.stringify({
+            username: user.email.split("@")[0],
+            token,
+            email: user.email,
+            subscriptionTier: user.subscriptionTier,
+          })
+        );
+        dispatch(
+          setcurrentuser({
+            username: user.email.split("@")[0],
+            token,
+            email: user.email,
+            subscriptionTier: user.subscriptionTier,
+          })
+        );
+        alert(`Successfully upgraded to ${tier}`);
+      } catch (error) {
+        console.error(
+          "Upgrade failed:",
+          error.response?.data?.error || error.message
+        );
+        alert(
+          "Upgrade failed: " +
+            (error.response?.data?.error || "Something went wrong")
+        );
+      }
     }
   };
 
@@ -127,7 +141,7 @@ const SubscriptionTiers = () => {
             ) : (
               <button
                 className="tier-button"
-                onClick={() => handleUpgradeTier(tier.name)}
+                onClick={() => handleUpgradeTier(tier.price)}
               >
                 {currentuser?.subscriptionTier === "Gold" &&
                 tier.name !== "Gold"

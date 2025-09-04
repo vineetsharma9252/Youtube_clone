@@ -13,6 +13,10 @@ import ChatRoom from "./Component/PrivateChat/Chat";
 import Dashboard from "./Component/PrivateChat/Dashboard";
 import Payment from "./Component/PaymentGateway/PaymentGateway";
 import SubscriptionTiers from "./Pages/Subcription/Subscription";
+import VideoCall from "./Component/VideoCall/VideoCall";
+import VideoCallRoom from "./Component/VideoCall/VideoCallRoom";
+import Login from "./Pages/Auth/Login";
+import ErrorBoundary from "./Pages/Auth/ErrorBoundary";
 
 const Allroutes = ({ seteditcreatechanelbtn, setvideouploadpage }) => {
   return (
@@ -38,6 +42,14 @@ const Allroutes = ({ seteditcreatechanelbtn, setvideouploadpage }) => {
       <Route path="/chat" element={<Dashboard />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/chat/:roomId" element={<ChatRoom />} />
+      <Route path="/video-call" element={<VideoCall />} />
+      <Route path="/video-call-room/:room-id" element={<VideoCallRoom />} />
+      <Route
+        path="/login"
+        element={
+            <Login />
+        }
+      />
     </Routes>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import SocketProvider from "./context/SocketProvider.jsx";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
@@ -18,7 +19,9 @@ root.render(
       domain={window.location.hostname}
     >
       <React.StrictMode>
+        <SocketProvider>
         <App />
+        </SocketProvider>
       </React.StrictMode>
     </GoogleOAuthProvider>
   </Provider>

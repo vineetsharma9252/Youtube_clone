@@ -58,7 +58,8 @@ export const upgrade_tier = async (req, res) => {
     const userId = req.userid;
     console.log("user id we are getting is ", userId);
     const { tier } = req.body;
-    if (!["free","Bronze", "Silver", "Gold"].includes(tier)) {
+    console.log("Requested tier:", tier);
+    if (!["free", "Bronze", "Silver", "Gold"].includes(tier)) {
       return res.status(400).json({ error: "Invalid tier" });
     }
 

@@ -22,6 +22,7 @@ const Videopage = () => {
   let tapCount = 0;
 
   const vv = vids?.data?.find((q) => q._id.toString() === vid);
+  console.log("Video data:", vv);
   const currentIndex = vids?.data?.findIndex((q) => q._id.toString() === vid);
 
   const handleviews = () => {
@@ -42,7 +43,10 @@ const Videopage = () => {
     const now = moment().tz("Asia/Kolkata");
     const hour = now.hour();
     const shouldBeLight = hour >= 10 && hour < 12;
-    if ((shouldBeLight && theme !== "light") || (!shouldBeLight && theme !== "dark")) {
+    if (
+      (shouldBeLight && theme !== "light") ||
+      (!shouldBeLight && theme !== "dark")
+    ) {
       dispatch(changeTheme());
     }
   }, [dispatch, theme]);
@@ -64,7 +68,16 @@ const Videopage = () => {
     const currentTime = new Date().getTime();
     const tapDelta = currentTime - lastTap;
 
-    console.log("Tap - Position:", tapPosition.toFixed(2), "Delta:", tapDelta, "Count:", tapCount + 1, "Event:", event.type);
+    console.log(
+      "Tap - Position:",
+      tapPosition.toFixed(2),
+      "Delta:",
+      tapDelta,
+      "Count:",
+      tapCount + 1,
+      "Event:",
+      event.type
+    );
 
     if (tapDelta < tapThreshold) {
       tapCount++;
@@ -73,7 +86,10 @@ const Videopage = () => {
           videoRef.current.currentTime += 10;
           console.log("Double-tap right - Skipped 10s");
         } else if (tapPosition < 0.33) {
-          videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+          videoRef.current.currentTime = Math.max(
+            0,
+            videoRef.current.currentTime - 10
+          );
           console.log("Double-tap left - Rewound 10s");
         }
       } else if (tapCount === 3) {
@@ -82,12 +98,13 @@ const Videopage = () => {
           console.log("Three-tap right - Redirected to homepage");
         } else if (tapPosition < 0.33) {
           const commentSection = document.querySelector(".comments_VideoPage");
-          if (commentSection) commentSection.scrollIntoView({ behavior: "smooth" });
+          if (commentSection)
+            commentSection.scrollIntoView({ behavior: "smooth" });
           console.log("Three-tap left - Scrolled to comments");
         } else {
           const nextVideoIndex = currentIndex + 1;
           if (nextVideoIndex < vids.data.length) {
-            navigate(`/video/${vids.data[nextVideoIndex]._id}`);
+            navigate(`/videopage/${vids.data[nextVideoIndex]._id}`);
           }
           console.log("Three-tap middle - Moved to next video");
         }
@@ -103,7 +120,7 @@ const Videopage = () => {
     }
     lastTap = currentTime;
   };
-
+  console.log("Current video: ", vv);
   if (!vv) {
     return (
       <div className={`yt-spinner-container ${theme}`}>
@@ -116,7 +133,12 @@ const Videopage = () => {
     <div className={`container_videoPage ${theme}`}>
       <div className="container2_videoPage">
         <div className="video_display_screen_videoPage">
-          <div className="custom-video-player" onTouchStart={handleVideoTap} onTouchEnd={handleVideoTap} onClick={handleVideoTap}>
+          <div
+            className="custom-video-player"
+            onTouchStart={handleVideoTap}
+            onTouchEnd={handleVideoTap}
+            onClick={handleVideoTap}
+          >
             <video
               src={`${vv?.filepath}`}
               className="video_ShowVideo_videoPage"
@@ -132,7 +154,11 @@ const Videopage = () => {
                   {vv?.views} views <div className="dot"></div>{" "}
                   {moment(vv?.createdat).fromNow()}
                 </div>
-                <Likewatchlatersavebtns vv={vv} vid={vid} currentuser={currentuser} />
+                <Likewatchlatersavebtns
+                  vv={vv}
+                  vid={vid}
+                  currentuser={currentuser}
+                />
               </div>
             </div>
             <Link to={"/"} className="chanel_details_videoPage">
