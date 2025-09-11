@@ -118,3 +118,15 @@
     font-size: 1.2rem;
   }
 }
+.watch-limit-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  z-index: 10;
+}

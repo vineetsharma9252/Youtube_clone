@@ -10,12 +10,13 @@ export const download = async (req, res) => {
   try {
     const userId = req.userid;
     const { id } = req.params;
-
-    const user = await User.findById(userId);
+    console.log("User ID from auth middleware:", userId);
+    console.log("Video ID from params:", id);
+    const user = await User.findOne({email: userId});
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
+    
     // Restrict downloads to Gold tier
     if (user.subscriptionTier !== "Gold") {
       return res.status(403).json({

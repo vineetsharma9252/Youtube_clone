@@ -15,9 +15,9 @@ function Payment() {
   const [checkboxChecked, setCheckboxChecked] = useState(false);
 
   useEffect(() => {
-    if (!state || !state.tier || !state.amount) {
+    if (!state || !state.tier || !state.amount || !state.email) {
       setMessage("Invalid payment request");
-      navigate("/subscription-tiers");
+      navigate("/");
       return;
     }
 
@@ -70,7 +70,7 @@ function Payment() {
 
         const options = {
           key: "rzp_live_nkIz2AeHKHH7n5", // Replace with your Razorpay key ID
-          amount: order.amount / 100,
+          amount: order.amount / 1000,
           currency: order.currency,
           name: "Your Tube",
           description: `Subscription to ${state.tier}`,
@@ -79,10 +79,11 @@ function Payment() {
             try {
               const upgradeResponse = await axios.post(
                 "http://localhost:5000/subscriptions/upgrade-tier",
-                { tier: state.tier },
+                { email: state.email, tier: state.tier },
                 { headers: { Authorization: `Bearer ${currentuser.token}` } }
               );
               const { user, token } = upgradeResponse.data;
+              // Update both Profile and authToken in localStorage
               localStorage.setItem(
                 "Profile",
                 JSON.stringify({
@@ -92,6 +93,7 @@ function Payment() {
                   subscriptionTier: user.subscriptionTier,
                 })
               );
+              localStorage.setItem("authToken", token); // Update authToken
               dispatch(
                 setcurrentuser({
                   username: user.email.split("@")[0],
@@ -101,7 +103,8 @@ function Payment() {
                 })
               );
               setMessage(`Payment Successful! Upgraded to ${state.tier}`);
-              setTimeout(() => navigate("/subscription-tiers"), 2000); // Redirect after 2 seconds
+              alert("Successfully upgraded!");
+              setTimeout(() => navigate("/"), 2000); // Redirect after 2 seconds
             } catch (error) {
               setMessage(
                 "Payment succeeded but upgrade failed: " +
@@ -135,75 +138,77 @@ function Payment() {
 
   return (
     <div className="payment-page">
-    <div className="payment-container">
-      <h1>Payment for {state?.tier} Subscription</h1>
-      {message ? (
-        <p>{message}</p>
-      ) : (
-        <>
-          <div className="payment-summary">
-            <h2>Payment Summary</h2>
-            <p>
-              <strong>Plan:</strong> {state?.tier}
-            </p>
-            <p>
-              <strong>Amount:</strong> ₹{(state?.amount / 100).toFixed(2)} /
-              month
-            </p>
-            <p>
-              <strong>Billing Cycle:</strong> Monthly (Auto-renewal)
-            </p>
-            <p className="save-note">
-              You save 10% by choosing an annual plan! (Coming soon)
-            </p>
-          </div>
-          <div className="benefits-preview">
-            <h2>Benefits of {state?.tier}</h2>
-            <ul>
-              {state?.tier === "Silver" && (
-                <>
-                  <li>Watch up to 10 minutes of videos</li>
-                  <li>Priority access to new content</li>
-                  <li>Unlimited channel subscriptions</li>
-                </>
+      <div className="payment-container">
+        <h1>Payment for {state?.tier} Subscription</h1>
+        {message ? (
+          <p>{message}</p>
+        ) : (
+          <>
+            <div className="payment-summary">
+              <h2>Payment Summary</h2>
+              <p>
+                <strong>Plan:</strong> {state?.tier}
+              </p>
+              <p>
+                <strong>Amount:</strong> ₹{(state?.amount / 100).toFixed(2)} /
+                month
+              </p>
+              <p>
+                <strong>Billing Cycle:</strong> Monthly (Auto-renewal)
+              </p>
+              <p className="save-note">
+                You save 10% by choosing an annual plan! (Coming soon)
+              </p>
+            </div>
+            <div className="benefits-preview">
+              <h2>Benefits of {state?.tier}</h2>
+              <ul>
+                {state?.tier === "Silver" && (
+                  <>
+                    <li>Watch up to 10 minutes of videos</li>
+                    <li>Priority access to new content</li>
+                    <li>Unlimited channel subscriptions</li>
+                  </>
+                )}
+                {state?.tier === "Gold" && (
+                  <>
+                    <li>Watch full videos without restrictions</li>
+                    <li>Exclusive content access</li>
+                    <li>Unlimited channel subscriptions</li>
+                    <li>Priority support</li>
+                  </>
+                )}
+              </ul>
+            </div>
+            <div className="confirmation-section">
+              <label>
+                <input type="checkbox" required onClick={handleCheckboxClick} />
+                I agree to the{" "}
+                <a href="/terms" target="_blank">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="/privacy" target="_blank">
+                  Privacy Policy
+                </a>
+              </label>
+              <p className="note">
+                This is a secure transaction. You will receive a confirmation
+                email after payment.
+              </p>
+              {checkboxChecked && (
+                <button
+                  onClick={loadRazorpay}
+                  className="payment-button"
+                  disabled={!razorpayLoaded}
+                >
+                  Proceed to Pay ₹{(state?.amount / 100).toFixed(2)}
+                </button>
               )}
-              {state?.tier === "Gold" && (
-                <>
-                  <li>Watch full videos without restrictions</li>
-                  <li>Exclusive content access</li>
-                  <li>Unlimited channel subscriptions</li>
-                  <li>Priority support</li>
-                </>
-              )}
-            </ul>
-          </div>
-          <div className="confirmation-section">
-            <label>
-              <input type="checkbox" required onClick={handleCheckboxClick}/>I agree to the{" "}
-              <a href="/terms" target="_blank">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="/privacy" target="_blank">
-                Privacy Policy
-              </a>
-            </label>
-            <p className="note">
-              This is a secure transaction. You will receive a confirmation
-              email after payment.
-            </p>
-            {checkboxChecked &&
-            <button
-              onClick={loadRazorpay}
-              className="payment-button"
-              disabled={!razorpayLoaded}
-            >
-              Proceed to Pay ₹{(state?.amount / 100).toFixed(2)}
-            </button>}
-          </div>
-        </>
-      )}
-    </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

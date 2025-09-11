@@ -1,6 +1,5 @@
-
 import express from "express";
-import auth from "../Middleware/auth.js";
+import auth from "../middleware/auth.js";
 import { download } from "../Controllers/download.js";
 import User from "../Models/Auth.js";
 // import Videofiles from "../Models/Videofiles.js";

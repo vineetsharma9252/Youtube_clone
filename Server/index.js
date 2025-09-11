@@ -17,15 +17,18 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "yoursecretkey";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import videofile from "./Models/videofile.js";
+import User from "./Models/Auth.js";
 
 import { OAuth2Client } from "google-auth-library";
 dotenv.config();
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "200mb", extended: true }));
-app.use(express.urlencoded({ limit: "200mb", extended: true }));
+app.use(express.json({ limit: "250mb", extended: true }));
+app.use(express.urlencoded({ limit: "250mb", extended: true }));
 app.use("/uploads", express.static(path.join("uploads")));
+// app.use("/public", express.static(path.join("public")));
 
 app.get("/", (req, res) => {
   res.send("Your tube is working");
@@ -34,7 +37,7 @@ app.get("/", (req, res) => {
 app.use(bodyParser.json());
 app.use("/user", userroutes);
 app.use("/video", videoroutes);
-app.use("/video/download", downloadRoutes);
+// app.use("/video/download", downloadRoutes);
 app.use("/comment", commentroutes);
 app.use("/subscriptions", subcription);
 app.use("/translate", translate);
@@ -193,6 +196,64 @@ app.post("/api/oauth/callback", async (req, res) => {
       message: "Authentication failed",
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
+  }
+});
+app.post("/video/download/:id", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "No token provided" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const videoId = req.params.id;
+    console.log("Video ID from params:", videoId);
+    const video = await videofile.findById(videoId);
+    if (!video) return res.status(404).json({ error: "Video not found" });
+
+    // Check subscription tier and daily download limit
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of the day
+
+    const downloadedToday = user.downloadedVideos.find(
+      (dv) =>
+        dv.videoid.toString() === videoId &&
+        new Date(dv.lastDownloaded).setHours(0, 0, 0, 0) === today.getTime()
+    );
+
+    if (
+      user.subscriptionTier !== "Gold" &&
+      (downloadedToday || user.downloadedVideos.length >= 1)
+    ) {
+      return res
+        .status(403)
+        .json({ error: "Download limit reached for today (1 per day)" });
+    }
+
+    // Update or add download record
+    if (downloadedToday) {
+      downloadedToday.lastDownloaded = new Date();
+    } else {
+      user.downloadedVideos.push({
+        videoid: videoId,
+        lastDownloaded: new Date(),
+      });
+    }
+    await user.save();
+
+    // Serve the video file (assuming video data is stored as a buffer or path)
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${video.title}.mp4"`
+    );
+    res.setHeader("Content-Type", "video/mp4");
+    res.send(video.videoData); // Adjust based on how video is stored (e.g., buffer or file path)
+  } catch (error) {
+    console.error("Download error:", error.message);
+    res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error.message });
   }
 });
 
@@ -376,7 +437,7 @@ app.post("/api/verify-email-otp", async (req, res) => {
     const user = {
       email,
       name: email.split("@")[0] || "Email User",
-      subscriptionTier: "Bronze",
+      subscriptionTier: "free",
     };
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.json({ success: true, message: "Email OTP verified", token, user });

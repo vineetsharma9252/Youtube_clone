@@ -304,18 +304,6 @@ export default function Login() {
   const handleOAuthSuccess = async (credentialResponse) => {
     setIsLoading(true);
     try {
-      if (isSouthernState === null) {
-        setMessage("Please wait for location detection.");
-        setIsLoading(false);
-        return;
-      }
-
-      if (!isSouthernState) {
-        setMessage("Google OAuth not supported for northern states; use email OTP.");
-        setIsLoading(false);
-        return;
-      }
-
       const response = await axios.post(
         "http://localhost:5000/api/oauth/callback",
         { credential: credentialResponse.credential },
@@ -325,7 +313,8 @@ export default function Login() {
         if (response.data.token) {
           localStorage.setItem("authToken", response.data.token);
         }
-        navigate("/video-call");
+        navigate("/");
+        window.location.reload();
       } else {
         setMessage(response.data.message || "OAuth login failed");
       }
@@ -454,7 +443,7 @@ export default function Login() {
             <GoogleLogin
               onSuccess={handleOAuthSuccess}
               onError={handleOAuthError}
-              disabled={isSouthernState === null || !isSouthernState}
+              disabled={isLoading || isSouthernState === null} // Removed !isSouthernState condition
             />
           </div>
 

@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 
-const userschema = mongoose.Schema({
-  email: { type: String, require: true },
-  name: { type: String },
-  desc: { type: String },
-  joinedon: { type: Date, default: Date.now },
-  subscriptionTier: {
-    type: String,
-    enum: ["free" , "Bronze", "Silver", "Gold"],
-    default: "free",
-  },
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, },
+  username: { type: String,  },
+  subscriptionTier: { type: String, default: "free" },
+  subscribedChannels: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  downloadedVideos: [
+    {
+      videoid: { type: mongoose.Schema.Types.ObjectId, ref: "Video" },
+      lastDownloaded: { type: Date },
+    },
+  ],
 });
 
-export default mongoose.model("User", userschema);
+export default mongoose.model("User", userSchema);

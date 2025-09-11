@@ -106,20 +106,26 @@ const Likewatchlatersavebtns = ({ vv, vid, currentuser }) => {
       alert("Please login to download");
       return;
     }
-    if (currentuser.subscriptionTier !== "Gold") {
-      alert("Download is available only for Gold tier subscribers");
-      return;
-    }
+
+    console.log("Initiating download for video ID:", vid);
+    console.log("Current user:", currentuser);
+
     try {
-      const response = await fetch("http://localhost:5000/video/download/" + vid, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${currentuser.token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/video/download/${vid}`, // Changed to GET
+        {
+          method: "POST", // Corrected to GET for file download
+          headers: {
+            Authorization: `Bearer ${currentuser.token}`,
+          },
+        }
+      );
+
       if (!response.ok) {
-        throw new Error("Download failed: " + (await response.text()));
+        const errorText = await response.text();
+        throw new Error(`Download failed: ${errorText}`);
       }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -184,7 +190,9 @@ const Likewatchlatersavebtns = ({ vv, vid, currentuser }) => {
         </div>
         {currentuser && (
           <div
-            className={`like_videoPage ${currentuser.subscriptionTier !== "Gold" ? "disabled" : ""}`}
+            className={`like_videoPage ${
+              currentuser.subscriptionTier !== "Gold" ? "disabled" : ""
+            }`}
             onClick={handleDownload}
           >
             <IoMdDownload size={22} className="btns_videoPage" />

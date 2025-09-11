@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setcurrentuser } from "../../action/currentuser";
 import "./SubscriptionTiers.css";
+import { jwtDecode } from "jwt-decode";
 
 const SubscriptionTiers = () => {
   const currentuser = useSelector((state) => state.currentuserreducer);
@@ -59,39 +60,42 @@ const SubscriptionTiers = () => {
       alert("You are already enrolled in this plan");
       return;
     }
-    // Extract amount from price (remove ₹ and /month)
-    const amount =
-      parseInt(tier.replace("₹", "").replace("/month", "").trim()) * 100; // Convert to paise
+    console.log("Current user:", currentuser);
+    const token = currentuser.token;
+    const email = currentuser.email || currentuser.userId || "";
+    const amount = parseInt(tier.replace("₹", "").replace("/month", "").trim()) * 100; // Convert to paise
 
     console.log("Selected tier:", tier, "Amount in paise:", amount);
+    console.log("User email:", email);
     if (amount > 0) {
-      // Navigate to payment page with tier details
-      navigate("/payment", { state: { tier, amount } });
+      navigate("/payment", { state: { tier, amount, email } });
     } else {
-      // Handle free tier upgrade directly
       tier = "free";
       console.log("Current user:", currentuser);
+      const data = { email, tier };
+      console.log("Upgrade data:", data);
       try {
         const response = await axios.post(
           "http://localhost:5000/subscriptions/upgrade-tier",
-          { tier },
+          data,
           { headers: { Authorization: `Bearer ${currentuser.token}` } }
         );
         console.log("Upgrade response:", response.data);
-        const { user, token } = response.data;
+        const { user, token: newToken } = response.data;
         localStorage.setItem(
           "Profile",
           JSON.stringify({
             username: user.email.split("@")[0],
-            token,
+            token: newToken,
             email: user.email,
             subscriptionTier: user.subscriptionTier,
           })
         );
+        localStorage.setItem("authToken", newToken); // Update authToken
         dispatch(
           setcurrentuser({
             username: user.email.split("@")[0],
-            token,
+            token: newToken,
             email: user.email,
             subscriptionTier: user.subscriptionTier,
           })

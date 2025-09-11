@@ -11,10 +11,12 @@ const auth = (req, res, next) => {
     console.log("jwt decode  : ", jwt.decode(token)); // Added decode for debugging
     let decodedata = jwt.verify(token, process.env.JWT_SECRET); // Fixed typo
     console.log("Decoded data is : ", decodedata);
-    req.userid = decodedata?.id;
+    req.userid = decodedata?.email;
     next();
   } catch (error) {
-    return res.status(401).json({ error: "Invalid credentials" }); // Match controller error format
+    return res
+      .status(401)
+      .json({ error: "Invalid credentials, yes this is the problem" }); // Match controller error format
   }
 };
 export default auth;

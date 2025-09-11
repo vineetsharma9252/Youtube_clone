@@ -7,10 +7,17 @@ import { watchlatercontroller,getallwatchlatervontroller,deletewatchlater } from
 import { likedvideocontroller,getalllikedvideo,deletelikedvideo } from "../Controllers/likedvideo.js";
 import upload from "../Helper/filehelper.js";
 import auth  from "../middleware/auth.js"
+import Video from "../Models/videofile.js";
+import User from "../Models/Auth.js";
+import jwt from "jsonwebtoken";
+
+
+
 const routes=express.Router();
 
 routes.post("/uploadvideo",auth,upload.single("file"),uploadvideo)
 
+// export default router;
 routes.get("/getvideos",getallvideos)
 routes.patch('/like/:id',auth,likevideocontroller)
 routes.patch('/view/:id',viewscontroller)

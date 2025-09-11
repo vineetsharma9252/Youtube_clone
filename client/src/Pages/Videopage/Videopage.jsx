@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Videopage.css";
 import moment from "moment-timezone";
 import Likewatchlatersavebtns from "./Likewatchlatersavebtns";
@@ -22,8 +22,19 @@ const Videopage = () => {
   let tapCount = 0;
 
   const vv = vids?.data?.find((q) => q._id.toString() === vid);
-  console.log("Video data:", vv);
   const currentIndex = vids?.data?.findIndex((q) => q._id.toString() === vid);
+
+  // State for tracking watch time
+  const [watchTime, setWatchTime] = useState(0);
+  const [isPausedByLimit, setIsPausedByLimit] = useState(false);
+
+  // Define watch time limits in minutes
+  const watchLimits = {
+    free: 5 * 60 * 1000, // 5 minutes in milliseconds
+    bronze: 7 * 60 * 1000, // 7 minutes in milliseconds
+    silver: 10 * 60 * 1000, // 10 minutes in milliseconds
+    gold: Infinity, // Unlimited
+  };
 
   const handleviews = () => {
     dispatch(viewvideo({ id: vid }));
@@ -58,6 +69,37 @@ const Videopage = () => {
       handlehistory();
     }
   }, [dispatch, vid]);
+
+  // Watch time tracking
+  useEffect(() => {
+    let timer;
+    const video = videoRef.current;
+
+    const startTimer = () => {
+      timer = setInterval(() => {
+        if (video && !video.paused && !isPausedByLimit) {
+          setWatchTime((prev) => {
+            const limit = watchLimits[currentuser?.subscriptionTier.toLowerCase() || "free"];
+            if (prev >= limit && limit !== Infinity) {
+              video.pause();
+              setIsPausedByLimit(true);
+              alert(`Watch limit reached (${Math.floor(limit / 60000)} minutes) for your ${currentuser?.subscriptionTier} tier. Upgrade to continue.`);
+              return prev;
+            }
+            return prev + 1000; // Increment by 1 second
+          });
+        }
+      }, 1000);
+    };
+
+    if (video) {
+      video.onplay = startTimer;
+      video.onpause = () => clearInterval(timer);
+      video.onended = () => clearInterval(timer);
+    }
+
+    return () => clearInterval(timer);
+  }, [currentuser?.subscriptionTier, isPausedByLimit]);
 
   // Gesture controls
   const handleVideoTap = (event) => {
@@ -112,7 +154,7 @@ const Videopage = () => {
       }
     } else {
       tapCount = 1;
-      if (tapPosition >= 0.33 && tapPosition <= 0.66) {
+      if (tapPosition >= 0.33 && tapPosition <= 0.66 && !isPausedByLimit) {
         if (videoRef.current.paused) videoRef.current.play();
         else videoRef.current.pause();
         console.log("Single-tap middle - Toggled play/pause");
@@ -120,6 +162,7 @@ const Videopage = () => {
     }
     lastTap = currentTime;
   };
+
   console.log("Current video: ", vv);
   if (!vv) {
     return (
@@ -145,6 +188,11 @@ const Videopage = () => {
               ref={videoRef}
               controls
             ></video>
+            {isPausedByLimit && (
+              <div className="watch-limit-overlay">
+                Watch limit reached. Upgrade your subscription to continue.
+              </div>
+            )}
           </div>
           <div className="video_details_videoPage">
             <div className="video_btns_title_VideoPage_cont">

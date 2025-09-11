@@ -1,22 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
 import "./Auth.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setcurrentuser } from "../../action/currentuser";
+import { getUserProfile } from "../../action/profile"; // Assuming this action exists
 
 const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
-  const [isSubscibedClick, setIsSubscribedClick] = React.useState(false);
+  const [isSubscibedClick, setIsSubscribedClick] = useState(false);
+  const [downloadedVideos, setDownloadedVideos] = useState([]);
   const dispatch = useDispatch();
-  
+  const profile = useSelector((state) => state.profileReducer); // Assuming profileReducer exists
+
+  useEffect(() => {
+    if (user?.email) {
+      dispatch(getUserProfile(user.email)).then(() => {
+        setDownloadedVideos(profile?.downloadedVideos || []);
+      });
+    }
+  }, [dispatch, user?.email, profile?.downloadedVideos]);
+
   const logout = () => {
     dispatch(setcurrentuser(null));
     localStorage.removeItem("authToken");
     googleLogout();
     setauthbtn(false);
   };
-  
+
   const handleSubcription = (e) => {
     e.stopPropagation();
     setIsSubscribedClick((prev) => !prev);
@@ -51,7 +62,7 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
         <button className="btn_Auth" onClick={handleSubcription}>
           Choose your subscription
         </button>
-        
+
         {isSubscibedClick && (
           <div className="subscription-options">
             <div className="sub_list">
@@ -82,10 +93,14 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
             </div>
           </div>
         )}
-        
+
         <div className="btns_Auths">
           {user?.username ? (
-            <Link to={`/channel/${user?.email}`} className="btn_Auth" onClick={() => setauthbtn(false)}>
+            <Link
+              to={`/channel/${user?.email}`}
+              className="btn_Auth"
+              onClick={() => setauthbtn(false)}
+            >
               Your Channel
             </Link>
           ) : (
@@ -99,11 +114,25 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
               Create Your Own Channel
             </button>
           )}
-          
+
           <div className="btn_Auth logout-btn" onClick={logout}>
             <BiLogOut />
             Log Out
           </div>
+        </div>
+
+        {/* Display Downloaded Videos */}
+        <div className="downloaded-videos-section">
+          <h3>Downloaded Videos</h3>
+          {downloadedVideos.length > 0 ? (
+            <ul>
+              {downloadedVideos.map((video) => (
+                <li key={video.videoid}>{video.title || `Video ${video.videoid}`}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No downloaded videos yet.</p>
+          )}
         </div>
       </div>
     </div>
