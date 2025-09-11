@@ -39,7 +39,7 @@ const Displaycommment = ({
       if (currentuser && cid) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/comment/${cid}/reactions`,
+            `https://youtube-clone-9.onrender.com/comment/${cid}/reactions`,
             {
               headers: { Authorization: `Bearer ${currentuser.token}` },
             }
@@ -75,7 +75,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/translate",
+        "https://youtube-clone-9.onrender.com/translate",
         { text: commentbody, sourceLang: "en", targetLang },
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -99,7 +99,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        `http://localhost:5000/comment/${cid}/like`,
+        `https://youtube-clone-9.onrender.com/comment/${cid}/like`,
         {},
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -121,7 +121,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        `http://localhost:5000/comment/${cid}/dislike`,
+        `https://youtube-clone-9.onrender.com/comment/${cid}/dislike`,
         {},
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -138,9 +138,12 @@ const Displaycommment = ({
 
   const handleDeleteComment = async () => {
     try {
-      await axios.delete(`http://localhost:5000/comment/${cid}`, {
-        headers: { Authorization: `Bearer ${currentuser.token}` },
-      });
+      await axios.delete(
+        `https://youtube-clone-9.onrender.com/comment/${cid}`,
+        {
+          headers: { Authorization: `Bearer ${currentuser.token}` },
+        }
+      );
       if (onDelete) onDelete(cid); // Notify parent to remove the comment
     } catch (err) {
       console.error("Delete error:", err.response?.data?.error || err.message);
@@ -151,7 +154,9 @@ const Displaycommment = ({
   return (
     <div className="comment-item">
       <div className="comment-header">
-        <span className="comment-user">{usercommented} {"  "}</span>
+        <span className="comment-user">
+          {usercommented} {"  "}
+        </span>
         <span className="comment-date">{new Date().toLocaleDateString()}</span>
       </div>
       <p className="comment-body">{commentbody}</p>

@@ -16,18 +16,18 @@ const SOUTHERN_LATITUDE_RANGE = { min: 8.0, max: 20.0 };
 // Major cities and their approximate coordinates for reference
 const MAJOR_CITIES = {
   // Southern cities
-  "Chennai": { lat: 13.0827, lng: 80.2707 },
-  "Bangalore": { lat: 12.9716, lng: 77.5946 },
-  "Hyderabad": { lat: 17.3850, lng: 78.4867 },
-  "Kochi": { lat: 9.9312, lng: 76.2673 },
-  "Coimbatore": { lat: 11.0168, lng: 76.9558 },
-  
+  Chennai: { lat: 13.0827, lng: 80.2707 },
+  Bangalore: { lat: 12.9716, lng: 77.5946 },
+  Hyderabad: { lat: 17.385, lng: 78.4867 },
+  Kochi: { lat: 9.9312, lng: 76.2673 },
+  Coimbatore: { lat: 11.0168, lng: 76.9558 },
+
   // Northern cities
-  "Delhi": { lat: 28.6139, lng: 77.2090 },
-  "Mumbai": { lat: 19.0760, lng: 72.8777 },
-  "Kolkata": { lat: 22.5726, lng: 88.3639 },
-  "Jaipur": { lat: 26.9124, lng: 75.7873 },
-  "Lucknow": { lat: 26.8467, lng: 80.9462 },
+  Delhi: { lat: 28.6139, lng: 77.209 },
+  Mumbai: { lat: 19.076, lng: 72.8777 },
+  Kolkata: { lat: 22.5726, lng: 88.3639 },
+  Jaipur: { lat: 26.9124, lng: 75.7873 },
+  Lucknow: { lat: 26.8467, lng: 80.9462 },
 };
 
 export default function Login() {
@@ -80,8 +80,9 @@ export default function Login() {
   }, [isSouthernState]);
 
   const classifyStateByLatitude = (latitude) => {
-    const isSouthern = latitude >= SOUTHERN_LATITUDE_RANGE.min && 
-                      latitude <= SOUTHERN_LATITUDE_RANGE.max;
+    const isSouthern =
+      latitude >= SOUTHERN_LATITUDE_RANGE.min &&
+      latitude <= SOUTHERN_LATITUDE_RANGE.max;
     setIsSouthernState(isSouthern);
     setMessage(
       `Your location: ${latitude.toFixed(4)}°N, ${
@@ -92,21 +93,27 @@ export default function Login() {
 
   const detectStateByIP = async () => {
     try {
-      const response = await axios.get('https://ipapi.co/json/', {
+      const response = await axios.get("https://ipapi.co/json/", {
         timeout: 5000,
       });
       const { latitude, longitude, region } = response.data;
       console.log("IP-based location:", response.data);
-      
+
       if (latitude && longitude) {
         setUserLocation({ latitude, longitude });
         classifyStateByLatitude(latitude);
       } else {
-        const southernRegions = ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana'];
+        const southernRegions = [
+          "Tamil Nadu",
+          "Kerala",
+          "Karnataka",
+          "Andhra Pradesh",
+          "Telangana",
+        ];
         const isSouthern = southernRegions.includes(region);
         setIsSouthernState(isSouthern);
         setMessage(
-          `IP detected in ${region || 'unknown region'}, ${
+          `IP detected in ${region || "unknown region"}, ${
             isSouthern ? "Southern" : "Northern"
           } state.`
         );
@@ -122,7 +129,11 @@ export default function Login() {
     if (scriptLoadAttempted.current) return;
     scriptLoadAttempted.current = true;
 
-    if (document.querySelector('script[src="https://verify.msg91.com/otp-provider.js"]')) {
+    if (
+      document.querySelector(
+        'script[src="https://verify.msg91.com/otp-provider.js"]'
+      )
+    ) {
       setIsWidgetLoaded(true);
       return;
     }
@@ -200,7 +211,9 @@ export default function Login() {
             setIsLoading(false);
           },
           (error) => {
-            setMessage(`Error sending OTP: ${error?.message || "Unknown error"}`);
+            setMessage(
+              `Error sending OTP: ${error?.message || "Unknown error"}`
+            );
             console.error("Send OTP failure:", error);
             setIsLoading(false);
           }
@@ -222,7 +235,7 @@ export default function Login() {
   const sendEmailOTP = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/send-email-otp",
+        "https://youtube-clone-9.onrender.com/api/send-email-otp",
         { email },
         { headers: { "x-requested-with": undefined } }
       );
@@ -248,7 +261,7 @@ export default function Login() {
         return;
       }
       const response = await axios.post(
-        "http://localhost:5000/api/verify-otp",
+        "https://youtube-clone-9.onrender.com/api/verify-otp",
         {
           token,
           mobile: contact.replace("+91", ""),
@@ -279,7 +292,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/verify-email-otp",
+        "https://youtube-clone-9.onrender.com/api/verify-email-otp",
         { email, otp },
         { headers: { "x-requested-with": undefined } }
       );
@@ -305,7 +318,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/oauth/callback",
+        "https://youtube-clone-9.onrender.com/api/oauth/callback",
         { credential: credentialResponse.credential },
         { headers: { "x-requested-with": undefined } }
       );
@@ -408,7 +421,9 @@ export default function Login() {
 
           {showOtpSection && isSouthernState && (
             <div>
-              <p>Please enter the OTP received on your mobile via the widget.</p>
+              <p>
+                Please enter the OTP received on your mobile via the widget.
+              </p>
               <div id="captcha-container" />
             </div>
           )}

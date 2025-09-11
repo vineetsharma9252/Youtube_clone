@@ -63,7 +63,8 @@ const SubscriptionTiers = () => {
     console.log("Current user:", currentuser);
     const token = currentuser.token;
     const email = currentuser.email || currentuser.userId || "";
-    const amount = parseInt(tier.replace("₹", "").replace("/month", "").trim()) * 100; // Convert to paise
+    const amount =
+      parseInt(tier.replace("₹", "").replace("/month", "").trim()) * 100; // Convert to paise
 
     console.log("Selected tier:", tier, "Amount in paise:", amount);
     console.log("User email:", email);
@@ -76,7 +77,7 @@ const SubscriptionTiers = () => {
       console.log("Upgrade data:", data);
       try {
         const response = await axios.post(
-          "http://localhost:5000/subscriptions/upgrade-tier",
+          "https://youtube-clone-9.onrender.com/subscriptions/upgrade-tier",
           data,
           { headers: { Authorization: `Bearer ${currentuser.token}` } }
         );

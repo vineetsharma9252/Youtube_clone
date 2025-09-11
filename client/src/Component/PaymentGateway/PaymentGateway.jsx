@@ -55,7 +55,7 @@ function Payment() {
       return;
     }
 
-    fetch("http://localhost:5000/create-order", {
+    fetch("https://youtube-clone-9.onrender.com/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: state.amount / 100 }), // Amount in paise
@@ -78,7 +78,7 @@ function Payment() {
           handler: async function (response) {
             try {
               const upgradeResponse = await axios.post(
-                "http://localhost:5000/subscriptions/upgrade-tier",
+                "https://youtube-clone-9.onrender.com/subscriptions/upgrade-tier",
                 { email: state.email, tier: state.tier },
                 { headers: { Authorization: `Bearer ${currentuser.token}` } }
               );
