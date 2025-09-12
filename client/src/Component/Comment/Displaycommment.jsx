@@ -39,7 +39,7 @@ const Displaycommment = ({
       if (currentuser && cid) {
         try {
           const response = await axios.get(
-            `https://youtube-clone-9.onrender.com/comment/${cid}/reactions`,
+            `http://localhost:5000/comment/${cid}/reactions`,
             {
               headers: { Authorization: `Bearer ${currentuser.token}` },
             }
@@ -75,7 +75,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        "https://youtube-clone-9.onrender.com/translate",
+        "http://localhost:5000/translate",
         { text: commentbody, sourceLang: "en", targetLang },
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -99,7 +99,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        `https://youtube-clone-9.onrender.com/comment/${cid}/like`,
+        `http://localhost:5000/comment/${cid}/like`,
         {},
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -121,7 +121,7 @@ const Displaycommment = ({
     }
     try {
       const response = await axios.post(
-        `https://youtube-clone-9.onrender.com/comment/${cid}/dislike`,
+        `http://localhost:5000/comment/${cid}/dislike`,
         {},
         { headers: { Authorization: `Bearer ${currentuser.token}` } }
       );
@@ -138,12 +138,9 @@ const Displaycommment = ({
 
   const handleDeleteComment = async () => {
     try {
-      await axios.delete(
-        `https://youtube-clone-9.onrender.com/comment/${cid}`,
-        {
-          headers: { Authorization: `Bearer ${currentuser.token}` },
-        }
-      );
+      await axios.delete(`http://localhost:5000/comment/${cid}`, {
+        headers: { Authorization: `Bearer ${currentuser.token}` },
+      });
       if (onDelete) onDelete(cid); // Notify parent to remove the comment
     } catch (err) {
       console.error("Delete error:", err.response?.data?.error || err.message);

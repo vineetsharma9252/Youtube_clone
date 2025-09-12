@@ -13,5 +13,12 @@ const userSchema = new mongoose.Schema({
     },
   ],
 });
-
+userSchema.pre("save", function (next) {
+  if (this.isModified("username") || this.isNew) {
+    if (!this.username) {
+      return next(new Error("Username is required"));
+    }
+  }
+  next();
+});
 export default mongoose.model("User", userSchema);

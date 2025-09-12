@@ -112,7 +112,7 @@ const Likewatchlatersavebtns = ({ vv, vid, currentuser }) => {
 
     try {
       const response = await fetch(
-        `https://youtube-clone-9.onrender.com/video/download/${vid}`, // Changed to GET
+        `http://localhost:5000/video/download/${vid}`, // Changed to GET
         {
           method: "POST", // Corrected to GET for file download
           headers: {

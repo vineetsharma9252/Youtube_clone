@@ -235,7 +235,7 @@ export default function Login() {
   const sendEmailOTP = async () => {
     try {
       const response = await axios.post(
-        "https://youtube-clone-9.onrender.com/api/send-email-otp",
+        "http://localhost:5000/api/send-email-otp",
         { email },
         { headers: { "x-requested-with": undefined } }
       );
@@ -261,7 +261,7 @@ export default function Login() {
         return;
       }
       const response = await axios.post(
-        "https://youtube-clone-9.onrender.com/api/verify-otp",
+        "http://localhost:5000/api/verify-otp",
         {
           token,
           mobile: contact.replace("+91", ""),
@@ -287,38 +287,70 @@ export default function Login() {
     }
   };
 
-  const handleVerifyEmailOTP = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        "https://youtube-clone-9.onrender.com/api/verify-email-otp",
-        { email, otp },
-        { headers: { "x-requested-with": undefined } }
-      );
-      if (response.data.success) {
-        setMessage("Login successful!");
-        if (response.data.token) {
-          localStorage.setItem("authToken", response.data.token);
+ const handleVerifyEmailOTP = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  try {
+    // First verify the email OTP
+    const verifyResponse = await axios.post(
+      "http://localhost:5000/api/verify-email-otp",
+      { email, otp },
+      { headers: { "x-requested-with": undefined } }
+    );
+    
+    if (verifyResponse.data.success) {
+      // If OTP verification is successful, call the login endpoint
+      try {
+        const loginResponse = await axios.post(
+          "http://localhost:5000/user/login",
+          { email },
+          { headers: { "x-requested-with": undefined } }
+        );
+        
+        if (loginResponse.data && loginResponse.data.token) {
+          setMessage("Login successful!");
+          
+          // Store the token in localStorage
+          localStorage.setItem("authToken", loginResponse.data.token);
+          
+          // Store user data if available
+          if (loginResponse.data.result) {
+            localStorage.setItem(
+              "Profile",
+              JSON.stringify({
+                username: loginResponse.data.result.username,
+                token: loginResponse.data.token,
+                email: loginResponse.data.result.email,
+                subscriptionTier: loginResponse.data.result.subscriptionTier,
+              })
+            );
+          }
+          
+          navigate("/");
+          window.location.reload();
+        } else {
+          setMessage("Login failed: No token received");
         }
-        navigate("/");
-        window.location.reload();
-      } else {
-        setMessage(response.data.message || "Invalid OTP");
+      } catch (loginError) {
+        console.error("Login error:", loginError);
+        setMessage("OTP verified but login failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Error verifying email OTP:", error);
-      setMessage("Error verifying email OTP. Please try again.");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setMessage(verifyResponse.data.message || "Invalid OTP");
     }
-  };
+  } catch (error) {
+    console.error("Error verifying email OTP:", error);
+    setMessage("Error verifying email OTP. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleOAuthSuccess = async (credentialResponse) => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://youtube-clone-9.onrender.com/api/oauth/callback",
+        "http://locahost:5000/api/oauth/callback",
         { credential: credentialResponse.credential },
         { headers: { "x-requested-with": undefined } }
       );

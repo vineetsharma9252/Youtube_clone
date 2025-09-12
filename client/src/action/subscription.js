@@ -3,7 +3,7 @@ import axios from "axios";
 export const getSubscriptionTierFromEmail = async (token) => {
   try {
     const response = await axios.get(
-      "https://youtube-clone-9.onrender.com/subscriptions/api/user/subscription-by-email",
+      "http://localhost:5000/subscriptions/api/user/subscription-by-email",
       {
         headers: { Authorization: `Bearer ${token}` },
       }

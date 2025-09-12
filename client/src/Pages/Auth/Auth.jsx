@@ -6,13 +6,14 @@ import "./Auth.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentuser } from "../../action/currentuser";
 import { getUserProfile } from "../../action/profile"; // Assuming this action exists
+import { useNavigate } from "react-router-dom";
 
 const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
   const [isSubscibedClick, setIsSubscribedClick] = useState(false);
   const [downloadedVideos, setDownloadedVideos] = useState([]);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profileReducer); // Assuming profileReducer exists
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (user?.email) {
       dispatch(getUserProfile(user.email)).then(() => {
@@ -34,10 +35,10 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
   };
 
   const handleUpgradeTier = (tier) => {
-    const tierPrices = { Silver: 5000, Gold: 7000 };
+    const tierPrices = {Bronze:1000 , Silver: 5000, Gold: 7000 };
     const amount = tierPrices[tier] || 0;
     if (amount > 0) {
-      window.location.href = `/payment?tier=${tier}&amount=${amount}`;
+      navigate("/payment", { state: { tier, amount, email: user.email } });
     }
     setauthbtn(false);
   };
@@ -56,7 +57,9 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
             </p>
           </div>
           <div className="email_auth">{user?.email}</div>
-          <div className="tier_auth">Tier: {user?.subscriptionTier || "Bronze"}</div>
+          <div className="tier_auth">
+            Tier: {user?.subscriptionTier || "Bronze"}
+          </div>
         </p>
         <br />
         <button className="btn_Auth" onClick={handleSubcription}>
@@ -71,7 +74,7 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
                   className="sub_btn gold"
                   onClick={() => handleUpgradeTier("Gold")}
                 >
-                  Gold Subscription - ₹7000
+                  Gold Subscription - ₹70
                 </button>
               </div>
               <div>
@@ -79,15 +82,12 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
                   className="sub_btn silver"
                   onClick={() => handleUpgradeTier("Silver")}
                 >
-                  Silver Subscription - ₹5000
+                  Silver Subscription - ₹50
                 </button>
               </div>
               <div>
-                <button
-                  className="sub_btn bronze"
-                  onClick={() => {}}
-                >
-                  Bronze Subscription - Free
+                <button className="sub_btn bronze" onClick={() => handleUpgradeTier("Bronze")}>
+                  Bronze Subscription - ₹10
                 </button>
               </div>
             </div>
@@ -127,7 +127,9 @@ const Auth = ({ user, setauthbtn, seteditcreatechanelbtn }) => {
           {downloadedVideos.length > 0 ? (
             <ul>
               {downloadedVideos.map((video) => (
-                <li key={video.videoid}>{video.title || `Video ${video.videoid}`}</li>
+                <li key={video.videoid}>
+                  {video.title || `Video ${video.videoid}`}
+                </li>
               ))}
             </ul>
           ) : (

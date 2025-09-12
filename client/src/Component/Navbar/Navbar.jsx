@@ -241,7 +241,8 @@ const Navbar = ({ toggledrawer, seteditcreatechanelbtn }) => {
               </div>
               <p className="user-tier">Tier: {currentuser.subscriptionTier}</p>
               {currentuser.subscriptionTier !== "Gold" && (
-                <div className="upgrade-buttons">
+                <div className="upgrade-buttons"
+                style={{ display: "flex", gap: "8px", marginLeft: "10px" }}>
                   <button
                     className="upgrade-btn silver"
                     onClick={() => handleUpgradeTier("Silver")}

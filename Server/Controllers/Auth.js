@@ -8,12 +8,16 @@ export const login = async (req, res) => {
     console.log("existing user", extinguser);
     if (!extinguser) {
       try {
-        const newuser = await users.create({ email });
+        const newuser = await users.create({
+          email,
+          username: email.trim().split("@")[0],
+          subscriptionTier: "free",
+        });
         const token = jwt.sign(
           {
             email: newuser.email,
             id: newuser._id,
-            subscriptionTier : newuser.subscriptionTier
+            subscriptionTier: newuser.subscriptionTier,
           },
           process.env.JWT_SECRET,
           {
@@ -22,6 +26,7 @@ export const login = async (req, res) => {
         );
         console.log("yeah it is working the token is " + token);
         console.log("new user created", newuser);
+
         res.status(200).json({ result: newuser, token });
       } catch (error) {
         res.status(500).json({ mess: "something went wrong..." });
@@ -32,7 +37,7 @@ export const login = async (req, res) => {
         {
           email: extinguser.email,
           id: extinguser._id,
-          subscriptionTier:extinguser.subscriptionTier
+          subscriptionTier: extinguser.subscriptionTier,
         },
         process.env.JWT_SECRET,
         {
