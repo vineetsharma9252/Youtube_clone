@@ -14,6 +14,7 @@ const auth = (req, res, next) => {
     req.userid = decodedata?.email;
     next();
   } catch (error) {
+    console.error("Auth middleware error:", error);
     return res
       .status(401)
       .json({ error: "Invalid credentials, yes this is the problem" }); // Match controller error format

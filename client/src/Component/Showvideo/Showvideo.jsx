@@ -8,7 +8,7 @@ const Showvideo = ({ vid }) => {
     <>
       <Link to={`/videopage/${vid._id}`}>
         {/* <video
-          src={`https://youtube-clone-9.onrender.com/${vid.filepath}`}
+          src={`http://localhost:5000/${vid.filepath}`}
           className="video_ShowVideo"
           autoPlay
           muted
@@ -16,7 +16,7 @@ const Showvideo = ({ vid }) => {
         /> */}
         <video className="video_ShowVideo" controls>
           <source src={`${vid.filepath}`} type="video/mp4" />
-          {/* <source src={`https://youtube-clone-9.onrender.com/${vid.filepath.replace('.mp4', '.webm')}`} type="video/webm" /> */}
+          {/* <source src={`http://localhost:5000/${vid.filepath.replace('.mp4', '.webm')}`} type="video/webm" /> */}
           Your browser does not support the video tag.
         </video>
       </Link>
