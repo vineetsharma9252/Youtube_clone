@@ -1,5 +1,5 @@
 import axios from "axios";
-const API = axios.create({ baseURL: `http://localhost:5000/` });
+const API = axios.create({ baseURL: `https://youtube-clone-9.onrender.com/` });
 // Removed setting a dummy "Profile" value to avoid JSON parsing errors
 API.interceptors.request.use((req) => {
   console.log("Profile is : ", localStorage.getItem("Profile"));

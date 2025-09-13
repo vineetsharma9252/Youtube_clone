@@ -77,7 +77,7 @@ const SubscriptionTiers = () => {
       console.log("Upgrade data:", data);
       try {
         const response = await axios.post(
-          "http://localhost:5000/subscriptions/upgrade-tier",
+          "https://youtube-clone-9.onrender.com/subscriptions/upgrade-tier",
           data,
           { headers: { Authorization: `Bearer ${currentuser.token}` } }
         );

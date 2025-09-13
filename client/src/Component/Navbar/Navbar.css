@@ -1,33 +1,47 @@
-
-/* Main navbar container */
+/* Main navbar container - THEME AWARE */
 .Container_Navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px; /* Standard navbar height */
-  background: linear-gradient(180deg, #1a1a1a, #212121); /* Subtle dark gradient */
-  color: #fff;
-  border-bottom: 1px solid #3c3c3c; /* Subtle border */
+  height: 56px;
   padding: 0 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+  border-bottom: 1px solid;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Dark theme */
+.Container_Navbar.dark {
+  background: linear-gradient(180deg, #1a1a1a, #212121);
+  color: #fff;
+  border-bottom-color: #3c3c3c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme */
+.Container_Navbar.light {
+  background: linear-gradient(180deg, #ffffff, #f8f9fa);
+  color: #333;
+  border-bottom-color: #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Burger menu and logo container */
 .Burger_Logo_Navbar {
   display: flex;
   align-items: center;
-  gap: 12px; /* Consistent spacing */
+  gap: 12px;
 }
 
-/* Burger menu */
+/* Burger menu - THEME AWARE */
 .burger {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px; /* Tighter spacing for hamburger lines */
+  gap: 4px;
   padding: 8px;
   cursor: pointer;
   border-radius: 50%;
@@ -35,29 +49,27 @@
 }
 
 .burger:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.Container_Navbar.dark .burger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .burger p {
   margin: 0;
   width: 18px;
   height: 2px;
-  background-color: #fff;
   border-radius: 1px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* Optional: Animate burger to 'X' when active (requires state in JSX) */
-.burger.active p:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
+.Container_Navbar.dark .burger p {
+  background-color: #fff;
 }
 
-.burger.active p:nth-child(2) {
-  opacity: 0;
-}
-
-.burger.active p:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -7px);
+.Container_Navbar.light .burger p {
+  background-color: #333;
 }
 
 /* Logo container */
@@ -69,7 +81,7 @@
 }
 
 .logo_div_Navbar img {
-  height: 32px; /* Consistent logo size */
+  height: 32px;
   object-fit: contain;
 }
 
@@ -77,16 +89,23 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #fff;
   letter-spacing: 0.5px;
   transition: color 0.2s ease;
 }
 
-.logo_div_Navbar:hover .logo_title_navbar {
-  color: #f1f1f1; /* Subtle hover effect */
+.Container_Navbar.dark .logo_title_navbar {
+  color: #fff;
 }
 
-/* Apps grid */
+.Container_Navbar.light .logo_title_navbar {
+  color: #333;
+}
+
+.logo_div_Navbar:hover .logo_title_navbar {
+  opacity: 0.8;
+}
+
+/* Apps grid - THEME AWARE */
 .apps_Box {
   display: grid;
   grid-template-columns: repeat(3, 8px);
@@ -99,14 +118,25 @@
 }
 
 .apps_Box:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.Container_Navbar.dark .apps_Box:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .appBox {
   width: 4px;
   height: 4px;
-  background-color: #fff;
   border-radius: 1px;
+}
+
+.Container_Navbar.dark .appBox {
+  background-color: #fff;
+}
+
+.Container_Navbar.light .appBox {
+  background-color: #333;
 }
 
 /* Auth container */
@@ -117,19 +147,27 @@
   margin-right: 8px;
 }
 
-/* Auth button */
+/* Auth button - THEME AWARE */
 .Auth_Btn {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: #2c2c2c;
   border: 1px solid #3ea6ff;
   border-radius: 4px;
-  color: #3ea6ff;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.Container_Navbar.dark .Auth_Btn {
+  background-color: #2c2c2c;
+  color: #3ea6ff;
+}
+
+.Container_Navbar.light .Auth_Btn {
+  background-color: #f8f9fa;
+  color: #3ea6ff;
 }
 
 .Auth_Btn:hover {
@@ -166,16 +204,52 @@
   color: #fff;
 }
 
-/* Subscription tier and upgrade buttons */
-.Auth_cont_Navbar p {
+/* Subscription tier and upgrade buttons - THEME AWARE */
+.user-tier {
   margin: 0;
   font-size: 0.9rem;
+}
+
+.Container_Navbar.dark .user-tier {
   color: #ccc;
 }
 
-.Auth_cont_Navbar button {
+.Container_Navbar.light .user-tier {
+  color: #666;
+}
+
+.upgrade-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.upgrade-btn {
   padding: 6px 12px;
-  margin-left: 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.upgrade-btn.silver {
+  background-color: #c0c0c0;
+  color: #333;
+}
+
+.upgrade-btn.gold {
+  background-color: #ffd700;
+  color: #333;
+}
+
+.upgrade-btn:hover {
+  opacity: 0.9;
+}
+
+.logout-btn {
+  padding: 6px 12px;
   background-color: #ff0000;
   border: none;
   border-radius: 4px;
@@ -186,19 +260,14 @@
   transition: background-color 0.2s ease;
 }
 
-.Auth_cont_Navbar button:hover {
+.logout-btn:hover {
   background-color: #cc0000;
 }
 
-.Auth_cont_Navbar button:active {
-  background-color: #990000;
-}
-
-/* Subscriptions link */
+/* Subscriptions link - THEME AWARE */
 .vid_bell_Navbar {
   display: flex;
   align-items: center;
-  color: #fff;
   font-size: 0.9rem;
   margin: 0 12px;
   cursor: pointer;
@@ -206,8 +275,41 @@
   transition: color 0.2s ease;
 }
 
+.Container_Navbar.dark .vid_bell_Navbar {
+  color: #fff;
+}
+
+.Container_Navbar.light .vid_bell_Navbar {
+  color: #333;
+}
+
 .vid_bell_Navbar:hover {
   color: #3ea6ff;
+}
+
+/* Theme toggle button - THEME AWARE */
+.theme-toggle-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.Container_Navbar.dark .theme-toggle-btn {
+  background: #333;
+  color: #fff;
+}
+
+.Container_Navbar.light .theme-toggle-btn {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.theme-toggle-btn:hover {
+  opacity: 0.9;
 }
 
 /* Responsive design */
@@ -226,7 +328,7 @@
   }
 
   .apps_Box {
-    display: none; /* Hide apps grid on mobile */
+    display: none;
   }
 
   .Auth_cont_Navbar {
@@ -238,7 +340,7 @@
     font-size: 0.85rem;
   }
 
-  .Auth_cont_Navbar button {
+  .upgrade-btn, .logout-btn {
     padding: 4px 8px;
     font-size: 0.8rem;
   }
@@ -261,6 +363,11 @@
   }
 
   .vid_bell_Navbar:not(:last-child) {
-    display: none; /* Hide icons except Subscriptions link */
+    display: none;
+  }
+  
+  .upgrade-buttons {
+    flex-direction: column;
+    gap: 4px;
   }
 }
