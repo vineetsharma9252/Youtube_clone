@@ -235,7 +235,7 @@ export default function Login() {
   const sendEmailOTP = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/send-email-otp",
+        "https://youtube-clone-9.onrender.com/api/send-email-otp",
         { email },
         { headers: { "x-requested-with": undefined } }
       );
@@ -261,7 +261,7 @@ export default function Login() {
         return;
       }
       const response = await axios.post(
-        "http://localhost:5000/api/verify-otp",
+        "https://youtube-clone-9.onrender.com/api/verify-otp",
         {
           token,
           mobile: contact.replace("+91", ""),
@@ -293,7 +293,7 @@ export default function Login() {
     try {
       // First verify the email OTP
       const verifyResponse = await axios.post(
-        "http://localhost:5000/api/verify-email-otp",
+        "https://youtube-clone-9.onrender.com/api/verify-email-otp",
         { email, otp },
         { headers: { "x-requested-with": undefined } }
       );
@@ -302,7 +302,7 @@ export default function Login() {
         // If OTP verification is successful, call the login endpoint
         try {
           const loginResponse = await axios.post(
-            "http://localhost:5000/user/login",
+            "https://youtube-clone-9.onrender.com/user/login",
             { email },
             { headers: { "x-requested-with": undefined } }
           );

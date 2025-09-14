@@ -4,7 +4,7 @@ export const getUserProfile = (email) => async (dispatch) => {
   try {
     const token = localStorage.getItem("authToken");
     const response = await axios.get(
-      `http://localhost:5000/api/user/profile/${email}`,
+      `https://youtube-clone-9.onrender.com/api/user/profile/${email}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
